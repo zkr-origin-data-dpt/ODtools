@@ -92,6 +92,7 @@ class HBaseClient(metaclass=Singleton):
                     coulumn_values.append(coulumn_value)
                 tput = TPut(rowkey, coulumn_values)
                 self.client.put(hbase_table.encode(encoding='utf-8'), tput)
+                return 'put success'
             except Exception as e:
                 print(e)
                 trash -= 1

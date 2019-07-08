@@ -7,9 +7,11 @@
     ├── scrapy_redis   
     ├── README.md  
     └── tools  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── excel_tools.py  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── fastdfs_tools.py  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── hbase_tools.py  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── redis_tools.py   
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── hbase_tools.py   
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── log_tools.py   
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── redis_tools.py  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── singleton_tools.py   
     
     | 文件名             |                                           |
@@ -17,13 +19,15 @@
     | fdfs_client        | fastdfs客户端                             |
     | hbase_client       | hbase客户端(thirft2)                      |
     | scrapy_redis       | scrapy_redis(支持redis集群)               |
+    | excel_tools.py     | excel工具                                 |
     | fastdfs_tools.py   | fastdfs工具类                             |
     | hbase_tools.py     | hbase工具类                               |
+    | log_tools.py       | 日志工具类                                |
     | redis_tools.py     | redis工具类(支持单机版reids和集群版redis) |
     | singleton_tools.py | 单例模式(元类版)                          |
     |                    |                                           |
     |                    |                                           |
-    |                    |                                           |
+    
     
 
 + scrapy_redis

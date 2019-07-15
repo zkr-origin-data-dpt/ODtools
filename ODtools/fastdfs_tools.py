@@ -1,9 +1,11 @@
+
 import random
 import sys
 import time
 import traceback
-from fdfs_client.client import Fdfs_client
-from tools.singleton_tools import Singleton
+
+from ODtools.fdfs_client.client import Fdfs_client
+from ODtools.singleton_tools import Singleton
 
 
 class FastDfsClient(metaclass=Singleton):
@@ -123,7 +125,7 @@ if __name__ == '__main__':
                 yield i
 
     from multiprocessing import Process
-    from threading import Thread
+
     fastdfs_gen = fastdfs_gen_func()
 
     def run():

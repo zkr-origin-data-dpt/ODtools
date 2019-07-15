@@ -1,6 +1,7 @@
 import redis
 import rediscluster
-from tools.singleton_tools import Singleton
+
+from ODtools.singleton_tools import Singleton
 
 
 class RedisClient(metaclass=Singleton):

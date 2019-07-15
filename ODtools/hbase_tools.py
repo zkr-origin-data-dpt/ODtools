@@ -1,9 +1,11 @@
 import random
-from thrift.transport import TSocket
+
 from thrift.protocol import TBinaryProtocol
-from hbase_client import THBaseService
-from hbase_client.ttypes import *
-from tools.singleton_tools import Singleton
+from thrift.transport import TSocket, TTransport
+
+from ODtools.hbase_client import *
+from ODtools.hbase_client.ttypes import *
+from ODtools.singleton_tools import Singleton
 
 
 class HBaseClient(metaclass=Singleton):
@@ -166,7 +168,6 @@ if __name__ == '__main__':
                 yield hb
 
     import time
-    from threading import Thread
     from multiprocessing import Process
     hb_gen = hb_gen_func()
 

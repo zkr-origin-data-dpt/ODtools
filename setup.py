@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ODtools",
-    version="1.0.0",
+    version="1.0.1",
     author="zkrPython",
     author_email="178031608@qq.com",
     description="zkrTools",
@@ -13,7 +13,7 @@ setup(
     include_package_data=True,
     zip_safe=True,
     install_requires=[
-
+        "pykafka"
     ],
     classifiers=[
         "Environment :: Web Environment",

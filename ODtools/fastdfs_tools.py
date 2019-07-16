@@ -1,9 +1,7 @@
-
 import random
 import sys
 import time
 import traceback
-
 from ODtools.fdfs_client.client import Fdfs_client
 from ODtools.singleton_tools import Singleton
 

@@ -8,8 +8,10 @@
     ├── README.md  
     └── tools  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── excel_tools.py  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── exceptions.py    
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── fastdfs_tools.py  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── hbase_tools.py   
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── hbase_tools.py  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── kafka_tools.py     
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── log_tools.py   
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── redis_tools.py  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── singleton_tools.py   
@@ -18,6 +20,7 @@
     | ------------------ | ----------------------------------------- |
     | fdfs_client        | fastdfs客户端                             |
     | hbase_client       | hbase客户端(thirft2)                      |
+    | kafka_tools        | kafka工具类                               |
     | scrapy_redis       | scrapy_redis(支持redis集群)               |
     | excel_tools.py     | excel工具                                 |
     | fastdfs_tools.py   | fastdfs工具类                             |

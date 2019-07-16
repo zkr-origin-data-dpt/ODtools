@@ -1,8 +1,6 @@
 import random
-
 from thrift.protocol import TBinaryProtocol
 from thrift.transport import TSocket, TTransport
-
 from ODtools.hbase_client import *
 from ODtools.hbase_client.ttypes import *
 from ODtools.singleton_tools import Singleton

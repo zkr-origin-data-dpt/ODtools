@@ -176,9 +176,9 @@ if __name__ == '__main__':
             time.sleep(random.random())
             print('-')
 
-    # run()
 
-    for i in range(5):
-        p = Process(target=run)
-        p.start()
+    run()
 
+    # for i in range(5):
+    #     p = Process(target=run)
+    #     p.start()

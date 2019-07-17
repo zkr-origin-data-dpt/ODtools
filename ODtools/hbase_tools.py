@@ -71,20 +71,24 @@ class HBaseClient(metaclass=Singleton):
         if trash == 0:
             raise Exception('fuck hbase down')
 
-    def put_result(self, hhase_row: str, hbase_item: dict, hbase_table: str, column_name: bytes = b"wa"):
+    def put_result(self, hbase_row: str, hbase_item: dict, hbase_table: str, column_name: str = "wa"):
         """
         存储
-        :param hhase_row: rowkey
+        :param hbase_row: rowkey
         :param hbase_item: 数据字典
         :param hbase_table: 表名
         :param column_name: 列簇
         :return:
         """
+        if type(column_name) == str:
+            column_name = column_name.encode(encoding='utf-8')
+        if type(column_name) != bytes:
+            raise Exception('Parameter error! column_name must is str or bytes')
         trash = 5
         while trash != 0:
             try:
                 coulumn_values = []
-                rowkey = hhase_row.encode(encoding='utf-8')
+                rowkey = hbase_row.encode(encoding='utf-8')
                 for key in hbase_item:
                     column = key.encode(encoding='utf-8')
                     value = str(hbase_item[key]).encode(encoding='utf-8')

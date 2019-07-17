@@ -109,27 +109,4 @@ class KafkaTask(metaclass=Singleton):
 
 
 if __name__ == '__main__':
-    import time
-    demo_Sever = '192.168.129.12:9092'
-    demo_Key = b'spider_demo'
-    demo_Topic = b'sc_kafka_content'
-    demo_GroupID = 'test'
-
-    # pykafka接收数据
-    def get_data_by_pykafka():
-        kafka_client = KafkaTask(server=demo_Sever)
-        kafka_client.init_consumer_pykafka(topic=demo_Topic, group_id=demo_GroupID,
-                                           offset_type="EARLIEST")  # 'offset_type' must be 'LATEST' or 'EARLIEST'
-        for msg in kafka_client.consumer:
-            print("Offset:{}, Partition-Key:{}, Copy:{}".format(msg.offset, msg.partition_key, msg.value))
-
-    get_data_by_pykafka()
-
-    # pykafka发送数据
-    # kafka_client = KafkaTask(server=demo_Sever)
-    # kafka_producer = kafka_client.init_producer(topic=demo_Topic)
-    # for i in range(10):
-    #     msg = 'msg-->' + str(i)
-    #     kafka_client.send_message(msg, key=demo_Key)
-    #     print("producer-key:{} ,发送值:{}".format(demo_Key, msg))
-    #     time.sleep(1)
+    pass

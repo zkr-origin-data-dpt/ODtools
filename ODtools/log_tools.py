@@ -122,20 +122,4 @@ def base_logger(log_name: str, file_path: str = './', mode: str = 'DEBUG',
 
 
 if __name__ == '__main__':
-    # logger = base_logger(log_name="1111")
-    # logger.info('@@@@@@@@')
-    from multiprocessing import Process
-    import time
-    import random
-
-    logger = base_logger(log_name="1111")
-
-    def run():
-        for i in range(10000):
-            logger.info(i)
-            time.sleep(random.random())
-
-    for j in range(5):
-        p = Process(target=run)
-        p.start()
-
+    pass

@@ -115,26 +115,4 @@ class FastDfsClient(metaclass=Singleton):
 
 
 if __name__ == '__main__':
-    fastdfs_list = [FastDfsClient(tracker_host="192.168.129.10", tracker_port=22122) for i in range(2)]
-    print(fastdfs_list)
-    # def fastdfs_gen_func():
-    #     while True:
-    #         for i in fastdfs_list:
-    #             yield i
-    #
-    # from multiprocessing import Process
-    #
-    # fastdfs_gen = fastdfs_gen_func()
-    #
-    # def run():
-    #     while True:
-    #         fd = next(fastdfs_gen)
-    #         file_path = fd.save_buffer(b'123', 'html')
-    #         print(file_path)
-    #         result = fd.delete_file(file_path)
-    #         print(file_path, result)
-    #         time.sleep(5)
-    #
-    # for i in range(2):
-    #     p = Process(target=run)
-    #     p.start()
+    pass

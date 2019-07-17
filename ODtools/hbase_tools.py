@@ -156,29 +156,4 @@ class HBaseClient(metaclass=Singleton):
 
 
 if __name__ == '__main__':
-    hbase_server = [('192.168.129.11', 9090), ('192.168.129.12', 9090)]
-    hb_list = [HBaseClient(h[0], h[1], hbase_server)
-               for h in hbase_server]
-
-    def hb_gen_func():
-        while True:
-            for hb in hb_list:
-                yield hb
-
-    import time
-    from multiprocessing import Process
-    hb_gen = hb_gen_func()
-
-    def run():
-        while True:
-            hb = next(hb_gen)
-            print(hb.get_result("1918846875-HzLYraKvJ", "WEIBO_INFO_TABLE")['wb_harmful_type_graph_time'])
-            time.sleep(random.random())
-            print('-')
-
-
-    run()
-
-    # for i in range(5):
-    #     p = Process(target=run)
-    #     p.start()
+    pass

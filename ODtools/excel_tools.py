@@ -4,10 +4,10 @@ import xlwt
 
 def read_excel(filename: str = None, sheet: str = "Sheet1", read_by_row: bool = False):
     """
-    读取excel文件
-    :param filename: excel文件名
-    :param sheet: excel表名
-    :param read_by_row: 是否按行读取 默认按列读取
+    read excel
+    :param filename: excel name
+    :param sheet: excel table
+    :param read_by_row: read by row or read by column
     :return:
     """
     assert filename, "No such file or directory: None"
@@ -20,11 +20,11 @@ def read_excel(filename: str = None, sheet: str = "Sheet1", read_by_row: bool = 
 
 def write_excel(xls_name: str = "", sheet: str = "Sheet1", titles: list = None, lines: list = None):
     """
-    写excel文件
-    :param xls_name: excel名字
-    :param sheet: 表名
-    :param titles: 表头
-    :param lines: 内容(二维数组)
+    write xls
+    :param xls_name: xls name
+    :param sheet: table name
+    :param titles: table header
+    :param lines: content (two dimensional array)
     :return:
     """
     excel = xls_name + '.xls'

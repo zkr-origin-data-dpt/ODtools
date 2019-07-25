@@ -6,14 +6,19 @@ setup(
     author="zkrPython",
     author_email="178031608@qq.com",
     description="zkrTools",
-    long_description=open("README.md",encoding="utf-8").read(),
+    long_description=open("README.md", encoding="utf-8").read(),
     license="Apache License",
     url="https://github.com/zkr-origin-data-dpt/ODtools",
     packages=find_packages(),
     include_package_data=True,
     zip_safe=True,
     install_requires=[
-        "pykafka"
+        "xlrd",
+        "xlwt",
+        "redis",
+        "thrift",
+        "pykafka",
+        "redis-py-cluster",
     ],
     classifiers=[
         "Environment :: Web Environment",

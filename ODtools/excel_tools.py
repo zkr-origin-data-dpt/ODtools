@@ -40,4 +40,3 @@ def write_excel(xls_name: str = "", sheet: str = "Sheet1", titles: list = None, 
 
 if __name__ == '__main__':
     write_excel('test', titles=['num'], lines=[[1, [1, 1]], [2], [3]])
-

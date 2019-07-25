@@ -1,6 +1,6 @@
 import random
 from thrift.protocol import TBinaryProtocol
-from thrift.transport import TSocket, TTransport
+from thrift.transport import TSocket
 from ODtools.hbase_client import *
 from ODtools.hbase_client.ttypes import *
 from ODtools.singleton_tools import Singleton
@@ -8,13 +8,13 @@ from ODtools.singleton_tools import Singleton
 
 class HBaseClient(metaclass=Singleton):
     """
-    HBase 工具类
+    HBase tools client
     """
     def __init__(self, hbase_address: str, hbase_port: int, hbase_servers: list = None):
         """
-        :param hbase_address:
-        :param hbase_port:
-        :param hbase_servers:
+        :param hbase_address: hbase address
+        :param hbase_port: hbase port
+        :param hbase_servers: hbase server node list
         """
         self.address = hbase_address
         self.port = hbase_port
@@ -23,7 +23,7 @@ class HBaseClient(metaclass=Singleton):
 
     def reconnect(self):
         """
-        重新连接hbase
+        reconnect hbase
         :return:
         """
         if self.servers:
@@ -32,12 +32,13 @@ class HBaseClient(metaclass=Singleton):
         else:
             self.client = self.init_client(self.address, self.port)
 
-    def init_client(self, address, port):
+    @staticmethod
+    def init_client(address: str, port: int):
         """
-        实例化hbase客户端
-        :param address:
-        :param port:
-        :return:
+        init hbase client
+        :param address: hbase address
+        :param port: hbase port
+        :return: hbase client
         """
         transport = TSocket.TSocket(address, port)
         transport = TTransport.TBufferedTransport(transport)
@@ -48,13 +49,13 @@ class HBaseClient(metaclass=Singleton):
 
     def get_result(self, hbase_row: str, hbase_table: str) -> dict:
         """
-        查询
+        retrieve hbase data
         :param hbase_row: rowkey
-        :param hbase_table: 表名
-        :return:
+        :param hbase_table: hbase table
+        :return: result
         """
         trash = 5
-        while trash != 0:
+        for i in range(trash):
             try:
                 values = {}
                 get = TGet()
@@ -64,28 +65,28 @@ class HBaseClient(metaclass=Singleton):
                     values[column.qualifier.decode('utf-8')] = column.value.decode('utf-8')
                 return values
             except Exception as e:
-                print(e)
-                trash -= 1
-                self.reconnect()
+                if i != trash - 1:
+                    self.reconnect()
+                    continue
+                else:
+                    raise e
 
-        if trash == 0:
-            raise Exception('fuck hbase down')
-
-    def put_result(self, hbase_row: str, hbase_item: dict, hbase_table: str, column_name: str = "wa"):
+    def put_result(self, hbase_row: str, hbase_item: dict, hbase_table: str, column_name: str = "wa") -> str:
         """
-        存储
+        create hbase data
         :param hbase_row: rowkey
-        :param hbase_item: 数据字典
-        :param hbase_table: 表名
-        :param column_name: 列簇
+        :param hbase_item: data
+        :param hbase_table: hbase table
+        :param column_name: column name
         :return:
         """
         if type(column_name) == str:
             column_name = column_name.encode(encoding='utf-8')
         if type(column_name) != bytes:
             raise Exception('Parameter error! column_name must is str or bytes')
+
         trash = 5
-        while trash != 0:
+        for i in range(trash):
             try:
                 coulumn_values = []
                 rowkey = hbase_row.encode(encoding='utf-8')
@@ -98,18 +99,17 @@ class HBaseClient(metaclass=Singleton):
                 self.client.put(hbase_table.encode(encoding='utf-8'), tput)
                 return 'put success'
             except Exception as e:
-                print(e)
-                trash -= 1
-                self.reconnect()
-
-        if trash == 0:
-            raise Exception('fuck hbase down')
+                if i != trash - 1:
+                    self.reconnect()
+                    continue
+                else:
+                    raise e
 
     def delete_result(self, hbase_row: str, hbase_table: str):
         """
-        删除
+        delete hbase data
         :param hbase_row: rowkey
-        :param hbase_table: 表名
+        :param hbase_table: hbase table
         :return:
         """
         tdelete = TDelete(hbase_row.encode())
@@ -117,9 +117,9 @@ class HBaseClient(metaclass=Singleton):
 
     def exists(self, hbase_row: str, hbase_table: str) -> bool:
         """
-        rowkey是否存在
+        exists rowkey
         :param hbase_row: rowkey
-        :param hbase_table: 表名
+        :param hbase_table: hbase table
         :return:
         """
         get = TGet()
@@ -129,9 +129,9 @@ class HBaseClient(metaclass=Singleton):
 
     def scan_result(self, hbase_table: str, start_row: str = None):
         """
-        扫表
-        :param hbase_table: 表名
-        :param start_row: 起始rowkey
+        scan hbase table data
+        :param hbase_table: hbase table
+        :param start_row: start rowkey
         :return:
         """
         tscan = TScan(startRow=start_row)

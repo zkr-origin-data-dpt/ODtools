@@ -1,19 +1,17 @@
-import random
-import sys
 import time
-import traceback
+import random
 from ODtools.fdfs_client.client import Fdfs_client
 from ODtools.singleton_tools import Singleton
 
 
 class FastDfsClient(metaclass=Singleton):
     """
-    fastdfs 工具类
+    fastdfs tools client
     """
     def __init__(self, tracker_host: str = None, tracker_port: int = None):
         """
-        :param tracker_host: tracker地址
-        :param tracker_port: tracker端口
+        :param tracker_host: tracker host
+        :param tracker_port: tracker port
         """
         self.trackers = {
             'host_tuple': (tracker_host, ),
@@ -23,87 +21,74 @@ class FastDfsClient(metaclass=Singleton):
         }
         self.client = Fdfs_client(trackers=self.trackers)
 
-    def save_file(self, filepath: str):
+    def save_file(self, filepath: str) -> str:
         """
-        保存文件
-        :param filepath: 本地文件路径
-        :return:
+        save file
+        :param filepath: local file path
+        :return: fastdfs path
         """
         trash = 3
-        while trash != 0:
+        for i in range(trash):
             try:
                 result = self.client.upload_by_filename(filepath)
                 if result['Status'] == 'Upload successed.':
                     return self.check_exception(result)
                 else:
                     raise ConnectionError
-            except BaseException as e:
-                time.sleep(random.random())
-                print('fasdfs exception: line:%s :%s' % (sys.exc_info()[2].tb_lineno, traceback.format_exc()))
-                trash -= 1
-                self.client = Fdfs_client(trackers=self.trackers)
+            except Exception as e:
+                if i != trash - 1:
+                    self.client = Fdfs_client(trackers=self.trackers)
+                    continue
+                else:
+                    raise e
 
-        if trash == 0:
-            # print('fuck fasdfs down')
-            # raise TIOError
-            # return ''
-            raise Exception("fuck fastdfs down")
-
-    def save_buffer(self, file_buffer: bytes, file_ext_name: str):
+    def save_buffer(self, file_buffer: bytes, file_ext_name: str) -> str:
         """
-        保存文件流
-        :param file_buffer: bytes流
-        :param file_ext_name: 文件格式
-        :return:
+        save file bytes buffer
+        :param file_buffer: bytes buffer
+        :param file_ext_name: file suffix
+        :return: fastdfs path
         """
         trash = 3
-        while trash != 0:
+        for i in range(trash):
             try:
                 result = self.client.upload_by_buffer(filebuffer=file_buffer, file_ext_name=file_ext_name)
                 if result['Status'] == 'Upload successed.':
                     return self.check_exception(result)
                 else:
                     continue
-            except BaseException as e:
-                time.sleep(random.random())
-                print('fasdfs exception: line:%s :%s' % (sys.exc_info()[2].tb_lineno, traceback.format_exc()))
-                trash -= 1
-                self.client = Fdfs_client(trackers=self.trackers)
+            except Exception as e:
+                if i != trash - 1:
+                    self.client = Fdfs_client(trackers=self.trackers)
+                    continue
+                else:
+                    raise e
 
-        if trash == 0:
-            # print('fuck fasdfs down')
-            # raise TIOError
-            # return ''
-            raise Exception("fuck fastdfs down")
-
-    def delete_file(self, dfs_name: str):
+    def delete_file(self, dfs_name: str) -> str:
         """
-        删除文件
-        :param dfs_name: 上传的文件路径
+        delete fastdfs file
+        :param dfs_name: fastdfs file path
         :return:
         """
         trash = 3
-        while trash != 0:
+        for i in range(trash):
             try:
                 result = self.client.delete_file(dfs_name)
-                return result
-            except BaseException as e:
-                time.sleep(random.random())
+                return result[0]
+            except Exception as e:
                 if "No such file or directory" in str(e):
-                    return e
-                print('fasdfs exception: line:%s :%s' % (sys.exc_info()[2].tb_lineno, e))
-                trash -= 1
-                self.client = Fdfs_client(trackers=self.trackers)
+                    return str(e)
+                if i != trash - 1:
+                    time.sleep(random.random())
+                    self.client = Fdfs_client(trackers=self.trackers)
+                    continue
+                else:
+                    raise e
 
-        if trash == 0:
-            # print('fuck fasdfs down')
-            # raise TIOError
-            # return ''
-            raise Exception("fuck fastdfs down")
-
-    def check_exception(self, result: dict):
+    @staticmethod
+    def check_exception(result: dict) -> str:
         """
-        检查是否上传成功
+        check exception
         :param result:
         :return:
         """
@@ -111,7 +96,7 @@ class FastDfsClient(metaclass=Singleton):
         if 'group' in dfs_name:
             return dfs_name
         else:
-            raise Exception("file upload fail")
+            raise Exception("Upload fail.")
 
 
 if __name__ == '__main__':

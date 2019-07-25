@@ -1,6 +1,6 @@
 class Singleton(type):
     """
-    单例模式
+    Singleton mode(Metaclass)
     """
     _instances = dict()
 
@@ -8,6 +8,7 @@ class Singleton(type):
         key = str(args) + str(kwargs)
         if key not in cls._instances:
             cls._instances[key] = super(Singleton, cls).__call__(*args, **kwargs)
+            print('Instantiation {class_name} success'.format(class_name=cls.__name__))
         return cls._instances[key]
 
 

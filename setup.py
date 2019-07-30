@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ODtools",
-    version="1.1.3",
+    version="1.1.4",
     author="zkrPython",
     author_email="178031608@qq.com",
     description="zkrTools",
@@ -16,8 +16,9 @@ setup(
         "xlrd",
         "xlwt",
         "redis",
+        "kafka",
         "thrift",
-        "pykafka",
+        "kafka-python",
         "redis-py-cluster",
     ],
     classifiers=[

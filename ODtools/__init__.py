@@ -16,7 +16,9 @@ VERSION = tuple(map(int, __version__.split('.')))
 
 
 __all__ = [
-    "fastdfs_tools",
-    "hbase_tools",
-    "redis_tools",
+    "fastdfs_tools", "hbase_tools", "redis_tools",
+    "SimpleHash", "BloomFilter", "read_excel", "write_excel",
+    "HBaseClient", "KafkaProducerClient", "KafkaConsumerClient",
+    "FastDfsClient", "base_logger", "RedisClient", "user_agents",
+    "headers", "Singleton", "time_counter", "timeit_counter"
 ]

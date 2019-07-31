@@ -41,7 +41,7 @@ class BloomFilter(object):
         if not str_input:
             return False
         m5 = md5()
-        m5.update(str_input)
+        m5.update(str_input.encode())
         str_input = m5.hexdigest()
         ret = True
         name = self.key + str(int(str_input[0:2], 16) % self.blockNum)
@@ -57,7 +57,7 @@ class BloomFilter(object):
         :return:
         """
         m5 = md5()
-        m5.update(str_input)
+        m5.update(str_input.encode())
         str_input = m5.hexdigest()
         name = self.key + str(int(str_input[0:2], 16) % self.blockNum)
         for f in self.hash_func:

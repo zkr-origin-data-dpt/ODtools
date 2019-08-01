@@ -22,7 +22,20 @@ class KafkaProducerClient(metaclass=Singleton):
                                       retries=retries,
                                       bootstrap_servers=bootstrap_servers,
                                       **kwargs)
-
+    def send_msg(self,topic:str,value:bytes,key:bytes,**kwargs:dict):
+        """
+        :param topic:
+        :param value:
+        :param key:
+        :return:
+        """
+        if type(topic) != str:
+            topic = str(topic)
+        if type(value) != bytes:
+            value = value.encode()
+        if type(key) != bytes:
+            key = key.encode()
+        self.producer.send(topic, value=value, key=key,)
 
 if __name__ == '__main__':
     pass

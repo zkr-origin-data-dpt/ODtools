@@ -94,6 +94,8 @@ def base_logger(log_name: str = 'default', file_path: str = './', mode: str = 'D
     logger.setLevel(log_level[mode])
     formatter = logging.Formatter('%(asctime)s - %(pathname)s - %(lineno)d - %(name)s - %(levelname)s: %(message)s')
 
+    handlers = set()
+
     if not os.path.exists(file_path):
         os.makedirs(file_path)
     log_name = os.path.join(file_path, log_name)
@@ -104,16 +106,23 @@ def base_logger(log_name: str = 'default', file_path: str = './', mode: str = 'D
                                  backup_count=backup_count)
 
     fh.setFormatter(formatter)
-    logger.addHandler(fh)
+    handlers.add(fh)
 
     if mode == 'DEBUG' or cmd_output:
         ch = logging.StreamHandler()
         ch.setLevel(log_level[mode])
         ch.setFormatter(formatter)
-        logger.addHandler(ch)
+        handlers.add(ch)
+
+    for handler in handlers:
+        logger.addHandler(handler)
 
     return logger
 
 
 if __name__ == '__main__':
-    pass
+    count = 0
+    logger = base_logger(file_path='./')
+    while True:
+        logger.info(str(count))
+        count += 1

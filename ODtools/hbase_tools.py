@@ -134,7 +134,7 @@ class HBaseClient(metaclass=Singleton):
         :param start_row: start rowkey
         :return:
         """
-        tscan = TScan(startRow=start_row)
+        tscan = TScan(startRow=start_row.encode())
         scan_id = self.client.openScanner(hbase_table.encode(), tscan)
         row_list = self.client.getScannerRows(scan_id, 1000)
         while row_list:

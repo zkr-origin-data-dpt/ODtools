@@ -121,8 +121,4 @@ def base_logger(log_name: str = 'default', file_path: str = './', mode: str = 'D
 
 
 if __name__ == '__main__':
-    count = 0
-    logger = base_logger(file_path='./')
-    while True:
-        logger.info(str(count))
-        count += 1
+    pass

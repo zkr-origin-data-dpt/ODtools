@@ -134,7 +134,7 @@ class HBaseClient(metaclass=Singleton):
         :param start_row: start rowkey
         :return:
         """
-        tscan = TScan(startRow=start_row.encode())
+        tscan = TScan(startRow=start_row.encode() if start_row else None)
         scan_id = self.client.openScanner(hbase_table.encode(), tscan)
         row_list = self.client.getScannerRows(scan_id, 1000)
         while row_list:
@@ -152,11 +152,11 @@ class HBaseClient(metaclass=Singleton):
                         continue
                 yield dict_data
             try:
-                row_list = self.client.getScannerRows(scan_id, 10000)
+                row_list = self.client.getScannerRows(scan_id, 1000)
             except Exception as e:
                 print(e)
                 self.reconnect()
-                row_list = self.client.getScannerRows(scan_id, 10000)
+                row_list = self.client.getScannerRows(scan_id, 1000)
 
 
 if __name__ == '__main__':

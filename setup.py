@@ -15,10 +15,10 @@ setup(
     install_requires=[
         "xlrd",
         "xlwt",
-        "redis",
+        "redis==2.10.6",
         "thrift",
         "kafka-python",
-        "redis-py-cluster",
+        "redis-py-cluster==1.3.6",
     ],
     classifiers=[
         "Environment :: Web Environment",

@@ -95,27 +95,6 @@ class FastDfsClient(metaclass=Singleton):
         """
         dfs_name = result['Remote file_id'].decode()
         if 'group' in dfs_name:
-
-            from ODtools import RedisClient
-            from datetime import datetime
-            r_pipe = RedisClient(host='127.0.0.1', port=6379, cluster=False).pipe
-            dfs_size = result['Uploaded size']
-            if dfs_size.endswith('B'):
-                dfs_size = dfs_size[:-1]
-            elif dfs_size.endswith('KB'):
-                dfs_size = dfs_size[:-2] * 1024
-            elif dfs_size.endswith('MB'):
-                dfs_size = dfs_size[:-2] * 1024 * 1024
-            elif dfs_size.endswith('GB'):
-                dfs_size = dfs_size[:-2] * 1024 * 1024 * 1024
-            else:
-                dfs_size = 0
-            dfs_suffix = result['Remote file_id'].decode().split('.')[-1]
-            key = 'fdfs_status_' + format(datetime.now(), "%Y-%m-%d")
-            r_pipe.hincrby(key, dfs_suffix, dfs_size)
-            r_pipe.expire(key, 24 * 3600 * 3)
-            r_pipe.execute()
-
             return dfs_name
         else:
             raise Exception("Upload fail.")

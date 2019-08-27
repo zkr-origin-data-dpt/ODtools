@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ODtools",
-    version="1.1.7",
+    version="1.1.8",
     author="zkrPython",
     author_email="178031608@qq.com",
     description="zkrTools",
@@ -15,10 +15,10 @@ setup(
     install_requires=[
         "xlrd",
         "xlwt",
-        "redis",
+        "redis==2.10.6",
         "thrift",
         "kafka-python",
-        "redis-py-cluster",
+        "redis-py-cluster==1.3.6",
     ],
     classifiers=[
         "Environment :: Web Environment",

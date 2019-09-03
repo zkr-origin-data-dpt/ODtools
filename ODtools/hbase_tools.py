@@ -32,18 +32,17 @@ class HBaseClient(metaclass=Singleton):
         else:
             self.client = self.init_client(self.address, self.port)
 
-    @staticmethod
-    def init_client(address: str, port: int):
+    def init_client(self, address: str, port: int):
         """
         init hbase client
         :param address: hbase address
         :param port: hbase port
         :return: hbase client
         """
-        transport = TSocket.TSocket(address, port)
-        transport = TTransport.TBufferedTransport(transport)
-        protocol = TBinaryProtocol.TBinaryProtocol(transport)
-        transport.open()
+        self.transport = TSocket.TSocket(address, port)
+        self.transport = TTransport.TBufferedTransport(self.transport)
+        protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+        self.transport.open()
         client = THBaseService.Client(protocol)
         return client
 
@@ -126,6 +125,16 @@ class HBaseClient(metaclass=Singleton):
         get.row = hbase_row.encode()
         result = self.client.exists(hbase_table.encode(), get)
         return result
+
+    def ping(self):
+        """
+        test hbase node
+        :return:
+        """
+        try:
+            return self.transport.isOpen()
+        except BaseException as e:
+            return False
 
     def scan_result(self, hbase_table: str, start_row: str = None):
         """

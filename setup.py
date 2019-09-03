@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="ODtools",
-    version="1.1.8",
+    version="1.1.9",
     author="zkrPython",
     author_email="178031608@qq.com",
     description="zkrTools",
-    long_description=open("README.md", encoding="utf-8").read(),
+    long_description="",
     license="Apache License",
     url="https://github.com/zkr-origin-data-dpt/ODtools",
     packages=find_packages(),

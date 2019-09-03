@@ -11,7 +11,7 @@ from ODtools.time_counter import time_counter
 from ODtools.timeit_counter import timeit_counter
 
 
-__version__ = '1.1.8'
+__version__ = '1.1.9'
 VERSION = tuple(map(int, __version__.split('.')))
 
 

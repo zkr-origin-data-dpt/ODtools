@@ -16,6 +16,7 @@ setup(
         "xlrd",
         "xlwt",
         "redis==2.10.6",
+        "elasticsearch==6.1.1",
         "thrift",
         "kafka-python",
         "redis-py-cluster==1.3.6",

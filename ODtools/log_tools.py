@@ -26,7 +26,7 @@ def base_logger(log_name: str = 'default', file_path: str = './', mode: str = 'D
 
     logger = logging.getLogger(log_name)
     logger.setLevel(log_level[mode])
-    formatter = logging.Formatter('%(asctime)s @ %(pathname)s @ %(lineno)d @ %(name)s @ %(levelname)s @ %(message)s')
+    formatter = logging.Formatter('%(asctime)s @zkr@ %(pathname)s @zkr@ %(lineno)d @zkr@ %(name)s @zkr@ %(levelname)s @zkr@ %(message)s')
 
     handlers = set()
 

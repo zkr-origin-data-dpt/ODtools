@@ -121,10 +121,19 @@ class HBaseClient(metaclass=Singleton):
         :param hbase_table: hbase table
         :return:
         """
-        get = TGet()
-        get.row = hbase_row.encode()
-        result = self.client.exists(hbase_table.encode(), get)
-        return result
+        trash = 5
+        for i in range(trash):
+            try:
+                get = TGet()
+                get.row = hbase_row.encode()
+                result = self.client.exists(hbase_table.encode(), get)
+                return result
+            except Exception as e:
+                if i != trash - 1:
+                    self.reconnect()
+                    continue
+                else:
+                    raise e
 
     def ping(self):
         """

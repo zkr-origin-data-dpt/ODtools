@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ODtools",
-    version="1.2.3",
+    version="1.2.4",
     author="zkrPython",
     author_email="178031608@qq.com",
     description="zkrTools",
@@ -20,6 +20,7 @@ setup(
         "thrift",
         "kafka-python",
         "redis-py-cluster==1.3.6",
+        "pymysql",
     ],
     classifiers=[
         "Environment :: Web Environment",

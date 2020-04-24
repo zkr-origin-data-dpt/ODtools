@@ -9,6 +9,7 @@ from ODtools.request_headers import user_agents, headers
 from ODtools.singleton_tools import Singleton
 from ODtools.time_counter import time_counter
 from ODtools.timeit_counter import timeit_counter
+from ODtools.save_data_class import SaveOriginalData
 
 
 __version__ = '1.1.9'
@@ -20,5 +21,5 @@ __all__ = [
     "SimpleHash", "BloomFilter", "read_excel", "write_excel",
     "HBaseClient", "KafkaProducerClient", "KafkaConsumerClient",
     "FastDfsClient", "base_logger", "RedisClient", "user_agents",
-    "headers", "Singleton", "time_counter", "timeit_counter"
+    "headers", "Singleton", "time_counter", "timeit_counter", "SaveOriginalData"
 ]

@@ -1,4 +1,6 @@
 import random
+import time
+
 from thrift.protocol import TBinaryProtocol
 from thrift.transport import TSocket
 from ODtools.hbase_client import *
@@ -26,6 +28,7 @@ class HBaseClient(metaclass=Singleton):
         reconnect hbase
         :return:
         """
+        time.sleep(5)
         if self.servers:
             h_a, h_p = random.choice(self.servers)
             self.client = self.init_client(h_a, h_p)

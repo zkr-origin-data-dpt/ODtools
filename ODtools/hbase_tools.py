@@ -28,7 +28,6 @@ class HBaseClient(metaclass=Singleton):
         reconnect hbase
         :return:
         """
-        time.sleep(5)
         if self.servers:
             h_a, h_p = random.choice(self.servers)
             self.client = self.init_client(h_a, h_p)
@@ -57,6 +56,7 @@ class HBaseClient(metaclass=Singleton):
         :return: result
         """
         trash = 5
+        self.reconnect()
         for i in range(trash):
             try:
                 values = {}
@@ -72,6 +72,8 @@ class HBaseClient(metaclass=Singleton):
                     continue
                 else:
                     raise e
+            finally:
+                self.close()
 
     def put_result(self, hbase_row: str, hbase_item: dict, hbase_table: str, column_name: str = "wa") -> str:
         """
@@ -82,6 +84,7 @@ class HBaseClient(metaclass=Singleton):
         :param column_name: column name
         :return:
         """
+        self.reconnect()
         if type(column_name) == str:
             column_name = column_name.encode(encoding='utf-8')
         if type(column_name) != bytes:
@@ -106,6 +109,8 @@ class HBaseClient(metaclass=Singleton):
                     continue
                 else:
                     raise e
+            finally:
+                self.close()
 
     def delete_result(self, hbase_row: str, hbase_table: str):
         """
@@ -114,8 +119,20 @@ class HBaseClient(metaclass=Singleton):
         :param hbase_table: hbase table
         :return:
         """
-        tdelete = TDelete(hbase_row.encode())
-        self.client.deleteSingle(hbase_table.encode(), tdelete)
+        trash = 5
+        self.reconnect()
+        for i in range(trash):
+            try:
+                tdelete = TDelete(hbase_row.encode())
+                self.client.deleteSingle(hbase_table.encode(), tdelete)
+            except BaseException as e:
+                if i != trash - 1:
+                    self.reconnect()
+                    continue
+                else:
+                    raise e
+            finally:
+                self.close()
 
     def exists(self, hbase_row: str, hbase_table: str) -> bool:
         """
@@ -125,6 +142,7 @@ class HBaseClient(metaclass=Singleton):
         :return:
         """
         trash = 5
+        self.reconnect()
         for i in range(trash):
             try:
                 get = TGet()
@@ -137,6 +155,8 @@ class HBaseClient(metaclass=Singleton):
                     continue
                 else:
                     raise e
+            finally:
+                self.close()
 
     def ping(self):
         """
@@ -147,6 +167,8 @@ class HBaseClient(metaclass=Singleton):
             return self.transport.isOpen()
         except BaseException as e:
             return False
+        finally:
+            self.close()
 
     def scan_result(self, hbase_table: str, start_row: str = None):
         """
@@ -155,6 +177,7 @@ class HBaseClient(metaclass=Singleton):
         :param start_row: start rowkey
         :return:
         """
+        self.reconnect()
         tscan = TScan(startRow=start_row.encode() if start_row else None)
         scan_id = self.client.openScanner(hbase_table.encode(), tscan)
         row_list = self.client.getScannerRows(scan_id, 1000)
@@ -178,7 +201,17 @@ class HBaseClient(metaclass=Singleton):
                 print(e)
                 self.reconnect()
                 row_list = self.client.getScannerRows(scan_id, 1000)
+            finally:
+                self.close()
 
+    def close(self):
+        """Close the underyling transport to the HBase instance.
+
+        This method closes the underlying Thrift transport (TCP connection).
+        """
+        if not self.transport.isOpen():
+            return
+        self.transport.close()
 
 if __name__ == '__main__':
     pass

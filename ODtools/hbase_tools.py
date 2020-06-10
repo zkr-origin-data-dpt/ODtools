@@ -40,12 +40,21 @@ class HBaseClient(metaclass=Singleton):
         :param port: hbase port
         :return: hbase client
         """
-        self.transport = TSocket.TSocket(address, port)
-        self.transport = TTransport.TBufferedTransport(self.transport)
-        protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
-        self.transport.open()
-        client = THBaseService.Client(protocol)
-        return client
+        for i in range(1000):
+            try:
+                self.transport = TSocket.TSocket(address, port)
+                self.transport = TTransport.TBufferedTransport(self.transport)
+                protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+                self.transport.open()
+                client = THBaseService.Client(protocol)
+                return client
+            except BaseException as e:
+                if self.servers:
+                    address, port = random.choice(self.servers)
+                else:
+                    raise Exception
+        else:
+            raise  Exception
 
     def get_result(self, hbase_row: str, hbase_table: str) -> dict:
         """

@@ -21,7 +21,6 @@ class HBaseClient(metaclass=Singleton):
         self.address = hbase_address
         self.port = hbase_port
         self.servers = hbase_servers
-        self.client = self.init_client(self.address, self.port)
 
     def reconnect(self):
         """
@@ -163,6 +162,7 @@ class HBaseClient(metaclass=Singleton):
         test hbase node
         :return:
         """
+        self.init_client(self.address, self.port)
         try:
             return self.transport.isOpen()
         except BaseException as e:
@@ -212,6 +212,7 @@ class HBaseClient(metaclass=Singleton):
         if not self.transport.isOpen():
             return
         self.transport.close()
+        del self.transport
 
 if __name__ == '__main__':
     pass

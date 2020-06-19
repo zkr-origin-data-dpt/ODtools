@@ -40,7 +40,7 @@ class HBaseClient(metaclass=Singleton):
         :param port: hbase port
         :return: hbase client
         """
-        for i in range(1000):
+        for i in range(5):
             try:
                 self.transport = TSocket.TSocket(address, port)
                 self.transport = TTransport.TBufferedTransport(self.transport)

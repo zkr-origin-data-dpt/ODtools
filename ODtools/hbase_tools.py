@@ -193,8 +193,7 @@ class HBaseClient(metaclass=Singleton):
         while row_list:
             for r in row_list:
                 dict_data = {}
-                hp = r.row
-                dict_data['rowkey'] = hp.decode()
+
                 for columnValue in r.columnValues:
                     try:
                         qualifier = columnValue.qualifier.decode()
@@ -203,6 +202,8 @@ class HBaseClient(metaclass=Singleton):
                     except Exception as e:
                         print(e)
                         continue
+                hp = r.row
+                dict_data['rowkey'] = hp.decode()
                 yield dict_data
             try:
                 row_list = self.client.getScannerRows(scan_id, 1000)

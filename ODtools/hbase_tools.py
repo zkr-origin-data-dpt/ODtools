@@ -219,10 +219,14 @@ class HBaseClient(metaclass=Singleton):
 
         This method closes the underlying Thrift transport (TCP connection).
         """
-        if not self.transport.isOpen():
-            return
-        self.transport.close()
-        del self.transport
+        try:
+            if not self.transport.isOpen():
+                return
+            self.transport.close()
+            del self.transport
+        except BaseException as e:
+            return e
+
 
 if __name__ == '__main__':
     pass

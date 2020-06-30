@@ -208,6 +208,7 @@ class HBaseClient(metaclass=Singleton):
             try:
                 row_list = self.client.getScannerRows(scan_id, 1000)
             except Exception as e:
+                self.close()
                 print(e)
                 self.reconnect()
                 row_list = self.client.getScannerRows(scan_id, 1000)

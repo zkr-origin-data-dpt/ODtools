@@ -211,8 +211,8 @@ class HBaseClient(metaclass=Singleton):
                 print(e)
                 self.reconnect()
                 row_list = self.client.getScannerRows(scan_id, 1000)
-            finally:
-                self.close()
+        else:
+            self.close()
 
     def close(self):
         """Close the underyling transport to the HBase instance.

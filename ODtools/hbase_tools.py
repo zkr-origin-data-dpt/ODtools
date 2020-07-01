@@ -75,13 +75,13 @@ class HBaseClient(metaclass=Singleton):
                     values[column.qualifier.decode('utf-8')] = column.value.decode('utf-8')
                 return values
             except Exception as e:
+                self.close()
+
                 if i != trash - 1:
                     self.reconnect()
                     continue
                 else:
                     raise e
-            finally:
-                self.close()
 
     def put_result(self, hbase_row: str, hbase_item: dict, hbase_table: str, column_name: str = "wa") -> str:
         """
@@ -112,13 +112,12 @@ class HBaseClient(metaclass=Singleton):
                 self.client.put(hbase_table.encode(encoding='utf-8'), tput)
                 return 'put success'
             except Exception as e:
+                self.close()
                 if i != trash - 1:
                     self.reconnect()
                     continue
                 else:
                     raise e
-            finally:
-                self.close()
 
     def delete_result(self, hbase_row: str, hbase_table: str):
         """
@@ -134,13 +133,12 @@ class HBaseClient(metaclass=Singleton):
                 tdelete = TDelete(hbase_row.encode())
                 self.client.deleteSingle(hbase_table.encode(), tdelete)
             except BaseException as e:
+                self.close()
                 if i != trash - 1:
                     self.reconnect()
                     continue
                 else:
                     raise e
-            finally:
-                self.close()
 
     def exists(self, hbase_row: str, hbase_table: str) -> bool:
         """
@@ -158,13 +156,12 @@ class HBaseClient(metaclass=Singleton):
                 result = self.client.exists(hbase_table.encode(), get)
                 return result
             except Exception as e:
+                self.close()
                 if i != trash - 1:
                     self.reconnect()
                     continue
                 else:
                     raise e
-            finally:
-                self.close()
 
     def ping(self):
         """
@@ -176,8 +173,7 @@ class HBaseClient(metaclass=Singleton):
             return self.transport.isOpen()
         except BaseException as e:
             return False
-        finally:
-            self.close()
+
 
     def scan_result(self, hbase_table: str, start_row: str = None):
         """

@@ -202,7 +202,6 @@ class HBaseClient(metaclass=Singleton):
                 dict_data['rowkey'] = start_row
                 yield dict_data
             try:
-                self.reconnect()
                 tscan = TScan(startRow=str(start_row).encode() if start_row else None)
                 scan_id = self.client.openScanner(str(hbase_table).encode(), tscan)
                 row_list = self.client.getScannerRows(scan_id, 1000)

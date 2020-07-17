@@ -21,6 +21,7 @@ class HBaseClient(metaclass=Singleton):
         self.address = hbase_address
         self.port = hbase_port
         self.servers = hbase_servers
+        self.reconnect()
 
     def reconnect(self):
         """
@@ -46,8 +47,8 @@ class HBaseClient(metaclass=Singleton):
                 self.transport = TTransport.TBufferedTransport(self.transport)
                 protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
                 self.transport.open()
-                client = THBaseService.Client(protocol)
-                return client
+                self.client = THBaseService.Client(protocol)
+                return self.client
             except BaseException as e:
                 if self.servers:
                     address, port = random.choice(self.servers)
@@ -64,7 +65,6 @@ class HBaseClient(metaclass=Singleton):
         :return: result
         """
         trash = 5
-        self.reconnect()
         for i in range(trash):
             try:
                 values = {}
@@ -92,7 +92,6 @@ class HBaseClient(metaclass=Singleton):
         :param column_name: column name
         :return:
         """
-        self.reconnect()
         if type(column_name) == str:
             column_name = column_name.encode(encoding='utf-8')
         if type(column_name) != bytes:
@@ -127,7 +126,6 @@ class HBaseClient(metaclass=Singleton):
         :return:
         """
         trash = 5
-        self.reconnect()
         for i in range(trash):
             try:
                 tdelete = TDelete(hbase_row.encode())
@@ -148,7 +146,6 @@ class HBaseClient(metaclass=Singleton):
         :return:
         """
         trash = 5
-        self.reconnect()
         for i in range(trash):
             try:
                 get = TGet()
@@ -182,7 +179,6 @@ class HBaseClient(metaclass=Singleton):
         :param start_row: start rowkey
         :return:
         """
-        self.reconnect()
         tscan = TScan(startRow=start_row.encode() if start_row else None)
         scan_id = self.client.openScanner(hbase_table.encode(), tscan)
         row_list = self.client.getScannerRows(scan_id, 1000)
@@ -212,8 +208,6 @@ class HBaseClient(metaclass=Singleton):
                 tscan = TScan(startRow=str(start_row).encode() if start_row else None)
                 scan_id = self.client.openScanner(str(hbase_table).encode(), tscan)
                 row_list = self.client.getScannerRows(scan_id, 1000)
-        else:
-            self.close()
 
     def close(self):
         """Close the underyling transport to the HBase instance.
@@ -230,4 +224,12 @@ class HBaseClient(metaclass=Singleton):
 
 
 if __name__ == '__main__':
-    pass
+    HBASE_INFO_SERVERS= [("192.168.129.191",9090)]
+    info_address, info_port = random.choice(HBASE_INFO_SERVERS)
+    print(info_address, info_port)
+    block_hbase = HBaseClient(hbase_address=info_address,
+                              hbase_port=info_port,
+                              hbase_servers=HBASE_INFO_SERVERS)
+
+    for i in  block_hbase.scan_result('WEIBO_INFO_TABLE'):
+        print(i)

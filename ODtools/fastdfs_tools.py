@@ -198,5 +198,6 @@ class FastDfsClient(metaclass=Singleton):
             raise Exception("Upload fail.")
 
 
+
 if __name__ == '__main__':
     pass

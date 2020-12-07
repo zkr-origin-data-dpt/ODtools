@@ -24,9 +24,13 @@ def base_logger(log_name: str = 'default', file_path: str = './', mode: str = 'D
     :return: logger
     """
 
+    import socket
+    host_name = socket.gethostname()
+    ip = socket.gethostbyname(host_name)
     logger = logging.getLogger(log_name)
     logger.setLevel(log_level[mode])
-    formatter = logging.Formatter('%(asctime)s @zkr@ %(pathname)s @zkr@ %(lineno)d @zkr@ %(name)s @zkr@ %(levelname)s @zkr@ %(message)s')
+    formatter = logging.Formatter(
+        f'%(asctime)s @zkr@ %(pathname)s @zkr@ %(lineno)d @zkr@ %(name)s @zkr@ %(levelname)s @zkr@ {ip} @zkr@ {host_name} @zkr@ %(message)s')
     #  这里进行判断，如果logger.handlers列表为空，则添加，否则，直接去写日志
     if not logger.handlers:
         handlers = set()

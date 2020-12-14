@@ -51,6 +51,7 @@ class HBaseClient(metaclass=Singleton):
                 return self.client
             except BaseException as e:
                 if self.servers:
+                    time.sleep(10)
                     address, port = random.choice(self.servers)
                 else:
                     raise Exception
@@ -76,7 +77,6 @@ class HBaseClient(metaclass=Singleton):
                 return values
             except Exception as e:
                 self.close()
-
                 if i != trash - 1:
                     self.reconnect()
                     continue
@@ -221,6 +221,8 @@ class HBaseClient(metaclass=Singleton):
             del self.transport
         except BaseException as e:
             return e
+        finally:
+            time.sleep(30)
 
 
 if __name__ == '__main__':

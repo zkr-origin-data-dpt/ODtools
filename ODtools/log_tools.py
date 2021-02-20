@@ -30,7 +30,7 @@ def base_logger(log_name: str = 'default', file_path: str = './', mode: str = 'D
     logger = logging.getLogger(log_name)
     logger.setLevel(log_level[mode])
     formatter = logging.Formatter(
-        f'%(asctime)s @zkr@ %(pathname)s @zkr@ %(lineno)d @zkr@ %(name)s @zkr@ %(levelname)s @zkr@ {ip} @zkr@ {host_name} @zkr@ %(message)s')
+        '%(asctime)s @zkr@ %(pathname)s @zkr@ %(lineno)d @zkr@ %(name)s @zkr@ %(levelname)s @zkr@ '+ip +' @zkr@ '+ host_name +' @zkr@ %(message)s')
     #  这里进行判断，如果logger.handlers列表为空，则添加，否则，直接去写日志
     if not logger.handlers:
         handlers = set()
@@ -57,6 +57,9 @@ def base_logger(log_name: str = 'default', file_path: str = './', mode: str = 'D
 
 
 if __name__ == '__main__':
-    a = base_logger("test")
+    from ODtools import  base_logger
+    a = base_logger(log_name="integertor--{}".format("1"),
+                                   file_path="/home/programslog/computeStatistics",
+                                   cmd_output=True)
     while True:
         a.info("test.1")

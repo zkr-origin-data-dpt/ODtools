@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ODtools",
-    version="1.9.2",
+    version="1.9.4",
     author="zkrPython",
     author_email="178031608@qq.com",
     description="zkrTools",
@@ -38,5 +38,6 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
 )

@@ -12,6 +12,7 @@ class HBaseClient(metaclass=Singleton):
     """
     HBase tools client
     """
+
     def __init__(self, hbase_address: str, hbase_port: int, hbase_servers: list = None):
         """
         :param hbase_address: hbase address
@@ -50,13 +51,14 @@ class HBaseClient(metaclass=Singleton):
                 self.client = THBaseService.Client(protocol)
                 return self.client
             except BaseException as e:
-                if self.servers:
-                    time.sleep(10)
+                self.close()
+                if self.servers:  # 换节点重新实例化
                     address, port = random.choice(self.servers)
+                    return self.init_client(address, port)
                 else:
                     raise Exception
         else:
-            raise  Exception
+            raise Exception
 
     def get_result(self, hbase_row: str, hbase_table: str) -> dict:
         """
@@ -171,7 +173,6 @@ class HBaseClient(metaclass=Singleton):
         except BaseException as e:
             return False
 
-
     def scan_result(self, hbase_table: str, start_row: str = None):
         """
         scan hbase table data
@@ -194,16 +195,19 @@ class HBaseClient(metaclass=Singleton):
                     except Exception as e:
                         print(e)
                         continue
-                start_row = r.row.decode()
-                dict_data['rowkey'] = start_row
-                yield dict_data
+                if r.row.decode() != start_row:  # 如果数据相同
+                    start_row = r.row.decode()
+                    dict_data['rowkey'] = start_row
+                    yield dict_data
+                else:
+                    return {}
             try:
                 tscan = TScan(startRow=str(start_row).encode() if start_row else None)
                 scan_id = self.client.openScanner(str(hbase_table).encode(), tscan)
                 row_list = self.client.getScannerRows(scan_id, 1000)
             except Exception as e:
                 self.close()
-                print(e)
+                print("scan thrift error ", e)
                 self.reconnect()
                 tscan = TScan(startRow=str(start_row).encode() if start_row else None)
                 scan_id = self.client.openScanner(str(hbase_table).encode(), tscan)
@@ -222,16 +226,8 @@ class HBaseClient(metaclass=Singleton):
         except BaseException as e:
             return e
         finally:
-            time.sleep(30)
+            time.sleep(2)
 
 
 if __name__ == '__main__':
-    HBASE_INFO_SERVERS= [("192.168.129.191",9090)]
-    info_address, info_port = random.choice(HBASE_INFO_SERVERS)
-    print(info_address, info_port)
-    block_hbase = HBaseClient(hbase_address=info_address,
-                              hbase_port=info_port,
-                              hbase_servers=HBASE_INFO_SERVERS)
-
-    for i in  block_hbase.scan_result('WEIBO_INFO_TABLE'):
-        print(i)
+    pass

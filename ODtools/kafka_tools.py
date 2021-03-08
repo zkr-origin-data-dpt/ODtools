@@ -35,7 +35,50 @@ class KafkaProducerClient(metaclass=Singleton):
             value = value.encode()
         if type(key) != bytes:
             key = key.encode()
-        self.producer.send(topic, value=value, key=key,)
+        if key:
+            self.producer.send(topic, value,key=key).add_callback(self.send_success).add_errback(
+            self.send_error)
+        else:
+            self.producer.send(topic, value).add_callback(self.send_success).add_errback(
+                self.send_error)
+        self.producer.flush()  # 批量提交
+
+    def send_msgs(self, topic: str, values: bytes, key: bytes, **kwargs: dict):
+        """
+        :param topic:
+        :param value:
+        :param key:
+        :return:
+        """
+        for value in values:
+            if type(topic) != str:
+                topic = str(topic)
+            if type(value) != bytes:
+                value = value.encode()
+            if type(key) != bytes:
+                key = key.encode()
+            if key:
+                self.producer.send(topic, value, key=key).add_callback(self.send_success).add_errback(
+                    self.send_error)
+            else:
+                self.producer.send(topic, value).add_callback(self.send_success).add_errback(
+                    self.send_error)
+        self.producer.flush()  # 批量提交
+
+    def send_success(self, *args, **kwargs):
+        print('save success')
+        return
+
+    def send_error(self, *args, **kwargs):
+        print('save error')
+        return
+
+    def close_producer(self):
+        try:
+            self.producer.close()
+        except:
+            pass
+
 
 if __name__ == '__main__':
     pass

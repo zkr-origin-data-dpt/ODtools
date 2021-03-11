@@ -183,24 +183,21 @@ class HBaseClient(metaclass=Singleton):
         tscan = TScan(startRow=start_row.encode() if start_row else None)
         scan_id = self.client.openScanner(hbase_table.encode(), tscan)
         row_list = self.client.getScannerRows(scan_id, 1000)
-        while row_list:
+        while len(row_list) == 1000:
             for r in row_list:
                 dict_data = {}
-
                 for columnValue in r.columnValues:
                     try:
                         qualifier = columnValue.qualifier.decode()
                         value = columnValue.value.decode()
                         dict_data[qualifier] = value
                     except Exception as e:
-                        print(e)
+                        print(e, "eror")
                         continue
                 if r.row.decode() != start_row:  # 如果数据相同
                     start_row = r.row.decode()
                     dict_data['rowkey'] = start_row
                     yield dict_data
-                else:
-                    return {}
             try:
                 tscan = TScan(startRow=str(start_row).encode() if start_row else None)
                 scan_id = self.client.openScanner(str(hbase_table).encode(), tscan)
@@ -212,6 +209,21 @@ class HBaseClient(metaclass=Singleton):
                 tscan = TScan(startRow=str(start_row).encode() if start_row else None)
                 scan_id = self.client.openScanner(str(hbase_table).encode(), tscan)
                 row_list = self.client.getScannerRows(scan_id, 1000)
+        else:
+            for r in row_list:
+                dict_data = {}
+                for columnValue in r.columnValues:
+                    try:
+                        qualifier = columnValue.qualifier.decode()
+                        value = columnValue.value.decode()
+                        dict_data[qualifier] = value
+                    except Exception as e:
+                        print(e, "eror")
+                        continue
+                if r.row.decode() != start_row:  # 如果数据相同
+                    start_row = r.row.decode()
+                    dict_data['rowkey'] = start_row
+                    yield dict_data
 
     def close(self):
         """Close the underyling transport to the HBase instance.

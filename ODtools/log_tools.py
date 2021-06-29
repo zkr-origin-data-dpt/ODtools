@@ -11,7 +11,11 @@ class base_logger:
                  cmd_output: bool = False, backup_count: int = 3):
         import socket
         logger.remove()
-        handler_id = logger.add(sys.stderr, level=mode)
+        if cmd_output:
+            handler_id = logger.add(sys.stderr, level=mode)
+        else:
+            handler_id = logger.add(sys.stderr, level="ERROR")
+
         host_name = socket.gethostname()
         try:
             ip = socket.gethostbyname(host_name)

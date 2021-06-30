@@ -1,11 +1,11 @@
 import os
 import sys
-import time
 
 from loguru import logger
 
 
 class base_logger:
+    __instance = None
 
     def __init__(self, log_name: str = 'default', file_path: str = './', mode: str = 'DEBUG',
                  cmd_output: bool = False, backup_count: int = 3):
@@ -15,7 +15,6 @@ class base_logger:
             handler_id = logger.add(sys.stderr, level=mode)
         else:
             handler_id = logger.add(sys.stderr, level="ERROR")
-
         host_name = socket.gethostname()
         try:
             ip = socket.gethostbyname(host_name)
@@ -24,8 +23,14 @@ class base_logger:
         log_file = os.path.join(file_path, log_name)
         formatter = """<green>{time:YYYY-MM-DD HH:mm:ss}</green> @zkr@ {file} @zkr@ {name} @zkr@ {level} @zkr@ {module} @zkr@ {function} @zkr@ {line} @zkr@ process-id: {process} @zkr@ """ + ip + """ @zkr@ """ + host_name + """ @zkr@ {message}"""
         logger.add("{}.log".format(log_file), format=formatter, level=mode,
-                   enqueue=True, retention="5 days", encoding="utf-8",
-                   rotation="50MB")
+                        enqueue=True, retention="5 days", encoding="utf-8",
+                        rotation="50MB")
+
+    def __new__(cls, log_name: str = 'default', file_path: str = './', mode: str = 'DEBUG',
+                cmd_output: bool = False, backup_count: int = 3, *args, **kwargs):
+        if not cls.__instance:
+            cls.__instance = super(base_logger, cls).__new__(cls)
+        return cls.__instance
 
     def info(self, msg):
         return logger.info(msg)
@@ -38,14 +43,3 @@ class base_logger:
 
     def error(self, msg):
         return logger.error(msg)
-
-
-if __name__ == '__main__':
-    from ODtools import base_logger
-
-    a = base_logger(log_name="integertor--{}".format("1"),
-                    file_path="./", mode="INFO",
-                    cmd_output=True)
-    for i in range(100):
-        a.info("test.1")
-        time.sleep(2)

@@ -12,7 +12,7 @@ from ODtools.timeit_counter import timeit_counter
 from ODtools.save_data_class import SaveOriginalData
 
 
-__version__ = "2.0.6"
+__version__ = "2.0.8"
 VERSION = tuple(map(int, __version__.split('.')))
 
 

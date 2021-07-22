@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ODtools",
-    version="2.0.9",
+    version="2.1.0",
     author="zkrPython",
     author_email="178031608@qq.com",
     description="zkrTools",
@@ -23,6 +23,8 @@ setup(
         "pymysql",
         "loguru",
         "colorlog",
+        "aiohttp==3.1.3",
+        "aiosocksy==0.1.2",
     ],
     classifiers=[
         "Environment :: Web Environment",

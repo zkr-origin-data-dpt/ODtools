@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ODtools",
-    version="2.1.0",
+    version="2.1.1",
     author="zkrPython",
     author_email="178031608@qq.com",
     description="zkrTools",

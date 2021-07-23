@@ -230,19 +230,19 @@ class Mrequest(object):
                             if self.statistic: record_dict['record_info'] = '{}_request_fail'.format(component_name)
                         if self.statistic: spider_record(self.db_client, record_dict, step, False)
                         if response_model == 'json':
-                            return await response.json(), str(response.url)
+                            return await response.json(), str(response.url), response
                         elif response_model == 'bytes':
-                            return await response.read(), str(response.url)
+                            return await response.read(), str(response.url), response
                         elif response_model == 'html':
-                            return await response.text(), str(response.url)
+                            return await response.text(), str(response.url), response
                         else:
-                            return response, str(response.url)
+                            return response, str(response.url), response
                 except Exception as e:
                     if self.statistic:
                         record_dict['record_info'] = '{}_request_fail'.format(component_name)
                         spider_record(self.db_client, record_dict, step, False)
                     print(e, url)
-                    return '', url
+                    return '', url, response
 
         tasks = [asyncio.ensure_future(async_request(i, **kwargs)) for i in urls]
         loop = asyncio.get_event_loop()
@@ -326,55 +326,3 @@ class Monitor(object):
             args=[summary_keys]
         )
         scheduler.start()
-
-    # def calc_count(self):
-    #     '''计算函数调用的次数,用于装饰其他函数'''
-    #     ...
-    #
-    # def time_counter(self):
-    #     '''最为装饰器装饰在函数中用于计算函数执行时间.ODtools中已经存在'''
-    #     ...
-
-
-if __name__ == '__main__':
-    # for s in Source:
-    # print('{}:{}'.format(p.value, s.value))
-    urls = ['www.ylxw.com.cn/2021/0618/303438.shtml', 'http://www.ylxw.com.cn/2021/0618/303416.shtml',
-            'http://www.ylxw.com.cn/2021/0618/303424.shtml', 'http://www.xinjiangnet.com.cn/2021/0614/2307271.shtml',
-            'http://www.ylxw.com.cn/2021/0618/303419.shtml', 'http://www.ylxw.com.cn/2021/0621/303898.shtml',
-            'http://www.ylxw.com.cn/2021/0618/303386.shtml', 'http://www.ylxw.com.cn/2021/0618/303424.shtml',
-            'http://www.ylxw.com.cn/2021/0618/303429.shtml', 'http://www.ylxw.com.cn/2021/0619/303585.shtml',
-            'http://www.ylxw.com.cn/2021/0619/303586.shtml', 'http://www.ylxw.com.cn/2021/0618/303422.shtml',
-            'http://www.ylxw.com.cn/2021/0618/303424.shtml']
-    rds = Redis(host='192.168.129.211', port=6380)
-# spider_record(rds, {'general_info': 'general_info', 'record_info': 'record_info'}, step=1)
-# task = Task(rds=rds)
-# task.cron_job('test:task', ['http://www.baidu.com' for i in range(10)])
-# task.cyclic_job('test:task1', ['http://www.baidu.com' for i in range(10)], 2)
-# task.single_job('test:task1', ['http://www.baidu.com' for i in range(10)])
-
-record_dict = {'project_name': Project.OTHER, 'source_name': Source.OTHER, 'component_name': 'wwww'}
-
-
-# req = Mrequest(rds, statistic = True)
-# url = 'http://www.ylxw.com.cn/2021/0618/303416.shtml'
-# response = req.aio_request(urls, record_dict=record_dict, timeout=3, headers=headers)
-# response = req.mrequest(url, record_dict=record_dict, timeout=3, headers=headers)
-# response = req.aio_request(['https://blog.csdn.net/u010412301/article/details/102739472' for i in range(10)], record_dict=record_dict, headers=headers, timeout=3)
-# print(response)
-class pp(Parse):
-    def __init__(self, rds):
-        super().__init__(rds, statistic=True)
-
-    def analysis_data(self, source_code, record_dict: dict = dict, step: int = 1, *args, **kwargs):
-        print('解析完成...')
-        super().analysis_data(source_code, record_dict, step, *args, **kwargs)
-
-
-p = pp(rds)
-p.analysis_data('', record_dict)
-# parse = Parse(rds, statistic=True)
-# a = parse.analysis_data(response.content.decode())
-# print(a)
-# monitor = Monitor(rds)
-# monitor.statistics_count({'summary_key': 'Big_key'}, hour='00')

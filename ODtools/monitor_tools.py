@@ -92,6 +92,11 @@ class Source(Enum):
     OTHER = 'OtherSource'
 
 
+class Response(Enum):
+    """错误的数据链接请求"""
+    status = 500
+
+
 class Task(object):
     """
     任务调度分发类,主要分为定时分发任务、循环分发任务、单次分发任务
@@ -193,7 +198,7 @@ class Mrequest(object):
         else:
             component_name = None
         try:
-            request_method = getattr(requests, method)
+            request_method = getattr(requests, method.lower())
         except AttributeError:
             raise AttributeError('no method named {}'.format(method))
         try:
@@ -210,9 +215,10 @@ class Mrequest(object):
                 record_dict['record_info'] = '{}_request_fail'.format(component_name)
                 spider_record(self.db_client, record_dict, step, False)
             print('失败计数加一')
-            return ''
+            return Response
 
-    def aio_request(self, urls: list, record_dict: dict = dict, response_model: str = 'html', step: int = 1, **kwargs):
+    def aio_request(self, urls: list, record_dict: dict = dict, response_model: str = 'html', step: int = 1,
+                    cookies=None, **kwargs):
         """
         异步发送请求,使用aiohttp.请求参数分别是: 目标任务url列表,计数器字典,请求响应格式,计数器步长
         :return:
@@ -220,8 +226,13 @@ class Mrequest(object):
         if self.statistic:
             component_name = record_dict['component_name']
 
-        async def async_request(url, **kwargs):
-            async with ClientSession(connector=ProxyConnector(), request_class=ProxyClientRequest) as session:
+        async def async_request(url, cookies=None, **kwargs):
+            if cookies:
+                clientSessionObj = ClientSession(connector=ProxyConnector(), request_class=ProxyClientRequest,
+                                                 cookies=cookies)
+            else:
+                clientSessionObj = ClientSession(connector=ProxyConnector(), request_class=ProxyClientRequest)
+            async with clientSessionObj as session:
                 try:
                     async with session.get(url, **kwargs) as response:
                         if response.status == 200:
@@ -241,10 +252,11 @@ class Mrequest(object):
                     if self.statistic:
                         record_dict['record_info'] = '{}_request_fail'.format(component_name)
                         spider_record(self.db_client, record_dict, step, False)
-                    print(e, url)
-                    return '', url, response
+                    import traceback
+                    print(traceback.format_exc(), url)
+                    return '', url, Response
 
-        tasks = [asyncio.ensure_future(async_request(i, **kwargs)) for i in urls]
+        tasks = [asyncio.ensure_future(async_request(i, cookies=cookies, **kwargs)) for i in urls]
         loop = asyncio.get_event_loop()
         loop.run_until_complete(asyncio.wait(tasks))
         del loop

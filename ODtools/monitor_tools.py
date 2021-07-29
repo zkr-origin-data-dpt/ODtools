@@ -94,7 +94,7 @@ class Source(Enum):
 
 class Response(Enum):
     """错误的数据链接请求"""
-    status = 500
+    status_code = 500
 
 
 class Task(object):

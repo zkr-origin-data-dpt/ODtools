@@ -1,5 +1,6 @@
 import logging
 import os
+import time
 from logging.handlers import RotatingFileHandler
 
 import colorlog as colorlog
@@ -84,3 +85,4 @@ if __name__ == '__main__':
                     cmd_output=True)
     while True:
         a.info("test.1")
+        time.sleep(5)

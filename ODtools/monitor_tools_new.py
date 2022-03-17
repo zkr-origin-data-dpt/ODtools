@@ -112,6 +112,7 @@ class Source(Enum):
     APP = 'App'
     HOTLIST = 'HotList'
     TOUTIAO = 'Toutiao'
+    BAIDU_BAIJIAHAO = 'baidu_baijihao'
     OTHER = 'OtherSource'
 
 
@@ -257,7 +258,7 @@ class Mrequest(object):
             if self.statistic:
                 record_dict['record_info'] = '{}_request_fail'.format(component_name)
                 spider_record(self.db_client, record_dict, step, False)
-            print('请求出错，失败计数加一')
+            print('请求出错，失败计数加一', record_dict)
             return Response
         finally:
             if "proxies" in kwargs.keys():
@@ -296,7 +297,7 @@ class Mrequest(object):
                         elif response_model == 'html':
                             return await response.text(), str(response.url), response
                         else:
-                            return response, str(response.url), response
+                            return await response, str(response.url), response
                 except Exception as e:
                     if self.statistic:
                         record_dict['record_info'] = '{}_request_fail'.format(component_name)
@@ -304,6 +305,14 @@ class Mrequest(object):
                     import traceback
                     print(traceback.format_exc(), url)
                     return '', url, Response
+                finally:
+                    """增加返回值，结果结果统计，按照bytes为单位统计"""
+                    if self.statistic: record_dict['record_info'] = '{}_request_content_length'.format(component_name)
+                    content_length = eval(response.headers.get("Content-Length", "0"))
+                    res_content = await response.read()
+                    if self.statistic: spider_record(self.db_client, record_dict,
+                                                     content_length if content_length else len(res_content),
+                                                     False)
 
         tasks = [asyncio.ensure_future(async_request(i, cookies=cookies, **kwargs)) for i in urls]
         loop = asyncio.get_event_loop()

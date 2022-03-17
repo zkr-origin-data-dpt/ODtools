@@ -25,6 +25,7 @@ setup(
         "colorlog",
         "aiohttp==3.1.3",
         "aiosocksy==0.1.2",
+        "apscheduler",
     ],
     classifiers=[
         "Environment :: Web Environment",

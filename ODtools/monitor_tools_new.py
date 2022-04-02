@@ -108,6 +108,7 @@ class Source(Enum):
     WECHAT = 'Wechat'
     DOUYIN = 'Douyin'
     NEWS = 'News'
+    SD = 'SD'
     TIEBA = 'Tieba'
     APP = 'App'
     HOTLIST = 'HotList'
@@ -119,6 +120,7 @@ class Source(Enum):
 class Response(Enum):
     """错误的数据链接请求"""
     status_code = 500
+    status = 500
     headers = {}
 
 
@@ -290,6 +292,13 @@ class Mrequest(object):
                         else:
                             if self.statistic: record_dict['record_info'] = '{}_request_fail'.format(component_name)
                         if self.statistic: spider_record(self.db_client, record_dict, step, False)
+                        if self.statistic: record_dict['record_info'] = '{}_request_content_length'.format(
+                            component_name)
+                        content_length = eval(response.headers.get("Content-Length", "0"))
+                        res_content = await response.read()
+                        if self.statistic: spider_record(self.db_client, record_dict,
+                                                         content_length if content_length else len(res_content),
+                                                         False)
                         if response_model == 'json':
                             return await response.json(), str(response.url), response
                         elif response_model == 'bytes':
@@ -304,15 +313,13 @@ class Mrequest(object):
                         spider_record(self.db_client, record_dict, step, False)
                     import traceback
                     print(traceback.format_exc(), url)
-                    return '', url, Response
-                finally:
-                    """增加返回值，结果结果统计，按照bytes为单位统计"""
                     if self.statistic: record_dict['record_info'] = '{}_request_content_length'.format(component_name)
-                    content_length = eval(response.headers.get("Content-Length", "0"))
-                    res_content = await response.read()
+                    content_length = 0
+                    res_content = ""
                     if self.statistic: spider_record(self.db_client, record_dict,
                                                      content_length if content_length else len(res_content),
                                                      False)
+                    return '', url, Response
 
         tasks = [asyncio.ensure_future(async_request(i, cookies=cookies, **kwargs)) for i in urls]
         loop = asyncio.get_event_loop()

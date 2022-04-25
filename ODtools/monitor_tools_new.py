@@ -267,7 +267,7 @@ class Mrequest(object):
             if "proxies" in kwargs.keys():
                 """增加代理正在使用限制"""
                 proxy_ip = kwargs.get("proxies").get("http")
-                if self.statistic: record_dict['proxy_info'] = {proxy_ip.split("//")[-1]: -1}
+                if self.statistic: record_dict['proxy_info'] = {proxy_ip.split("//")[-1]: -1} if proxy_ip else {"": 1}
                 if self.statistic: spider_proxy_record(self.db_client, record_dict, False)
 
     def aio_request(self, urls: list, record_dict: dict = dict, response_model: str = 'html', step: int = 1,

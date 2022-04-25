@@ -236,7 +236,7 @@ class Mrequest(object):
             if "proxies" in kwargs.keys():
                 """增加代理正在使用限制"""
                 proxy_ip = kwargs.get("proxies").get("http")
-                if self.statistic: record_dict['proxy_info'] = {proxy_ip.split("//")[-1]: 1}
+                if self.statistic: record_dict['proxy_info'] = {proxy_ip.split("//")[-1]: 1} if proxy_ip else {"": 1}
                 if self.statistic: spider_proxy_record(self.db_client, record_dict, False)
 
                 if self.statistic: record_dict['record_info'] = '{}_request_proxy'.format(component_name)
@@ -256,7 +256,8 @@ class Mrequest(object):
                 if self.statistic: spider_record(self.db_client, record_dict, step, False)
             return response
         except Exception as e:
-            print("请求出错，原因 {}".format(e))
+            import traceback
+            print("请求出错，原因 {}".format(traceback.format_exc()))
             if self.statistic:
                 record_dict['record_info'] = '{}_request_fail'.format(component_name)
                 spider_record(self.db_client, record_dict, step, False)

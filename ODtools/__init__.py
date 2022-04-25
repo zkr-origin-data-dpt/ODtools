@@ -12,7 +12,7 @@ from ODtools.singleton_tools import Singleton
 from ODtools.time_counter import time_counter
 from ODtools.timeit_counter import timeit_counter
 
-__version__ = "2.1.9"
+__version__ = "2.1.10"
 VERSION = tuple(map(int, __version__.split('.')))
 
 __all__ = [

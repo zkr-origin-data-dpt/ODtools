@@ -16,8 +16,8 @@ class RedisClient(metaclass=Singleton):
         :param port: redis port
         :param cluster: is redis cluster or not
         """
-        self.host = random.choices(host) if type(host) == list else host
-        self.port = random.choices(port) if type(port) == list else port
+        self.host = random.choice(host) if type(host) == list else host
+        self.port = random.choice(port) if type(port) == list else port
         redis_type = rediscluster.StrictRedisCluster if cluster else redis.StrictRedis
         if password:
             self.redis = redis_type(host=self.host,

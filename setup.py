@@ -23,7 +23,7 @@ setup(
         "pymysql",
         "loguru",
         "colorlog",
-        "aiohttp==3.1.3",
+        "aiohttp==3.7.4",
         "aiosocksy==0.1.2",
         "apscheduler",
     ],

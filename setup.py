@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ODtools",
-    version="2.1.13",
+    version="2.1.14",
     author="zkrPython",
     author_email="178031608@qq.com",
     description="zkrTools",
@@ -26,6 +26,7 @@ setup(
         "aiohttp==3.1.3",
         "aiosocksy==0.1.2",
         "apscheduler",
+        "PySocks",
     ],
     classifiers=[
         "Environment :: Web Environment",

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ODtools",
-    version="2.1.15",
+    version="2.1.18",
     author="zkrPython",
     author_email="178031608@qq.com",
     description="zkrTools",
@@ -15,11 +15,11 @@ setup(
     install_requires=[
         "xlrd",
         "xlwt",
-        "redis==2.10.6",
+        "redis",
         "elasticsearch==6.1.1",
         "thrift",
         "kafka-python",
-        "redis-py-cluster==1.3.6",
+        "redis-py-cluster",
         "pymysql",
         "loguru",
         "colorlog",

@@ -10,7 +10,7 @@ class RedisClient(metaclass=Singleton):
     redis tools client
     """
 
-    def __init__(self, host: str, port: int, cluster: bool = False, password: str = False):
+    def __init__(self, host: str, port: int, cluster: bool = False, password: str = False, **kwargs):
         """
         :param host: redis host
         :param port: redis port
@@ -18,23 +18,23 @@ class RedisClient(metaclass=Singleton):
         """
         self.host = random.choice(host) if type(host) == list else host
         self.port = random.choice(port) if type(port) == list else port
-        redis_type = rediscluster.StrictRedisCluster if cluster else redis.StrictRedis
+        redis_type = rediscluster.RedisCluster if cluster else redis.StrictRedis
         if password:
             self.redis = redis_type(host=self.host,
                                     port=self.port,
                                     password=password,
                                     decode_responses=True,
-                                    socket_connect_timeout=5)
+                                    socket_connect_timeout=5, **kwargs)
         else:
             self.redis = redis_type(host=self.host,
-                                port=self.port,
-                                decode_responses=True,
-                                socket_connect_timeout=5)
+                                    port=self.port,
+                                    decode_responses=True,
+                                    socket_connect_timeout=5, **kwargs)
 
         self.pipe = self.redis.pipeline()
 
 
 if __name__ == '__main__':
-    a = RedisClient("192.168.129.212",6390,False,"xjzfw2020").redis
+    a = RedisClient("192.168.129.212", 6390, False, "xjzfw2020").redis
     # a = RedisClient("192.168.129.213",6400,False).redis
     print(a.info())

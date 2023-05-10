@@ -31,7 +31,6 @@ class RedisClient(metaclass=Singleton):
                                     decode_responses=True,
                                     socket_connect_timeout=5, **kwargs)
 
-        self.pipe = self.redis.pipeline()
 
 
 if __name__ == '__main__':

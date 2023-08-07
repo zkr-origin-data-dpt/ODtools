@@ -15,7 +15,7 @@ setup(
     install_requires=[
         "xlrd",
         "xlwt",
-        "elasticsearch==6.1.1",
+        "elasticsearch==8.1.0",
         "thrift",
         "kafka-python",
         "redis-py-cluster==2.1.3",
